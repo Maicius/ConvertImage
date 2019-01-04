@@ -18,13 +18,13 @@ class ConvertImage(object):
         shape = np.shape(image)
         print(shape)
         small_shape = self.get_small_shape(shape)
-        # small_image = cv2.resize(image, small_shape)
+        small_image = cv2.resize(image, small_shape)
 
-        # cv2.imshow(image_name, small_image)
-        # cv2.imwrite(self.__small_path + '/' + image_name, small_image)
+        cv2.imshow(image_name, small_image)
+        cv2.imwrite(self.__small_path + '/' + image_name, small_image)
         middle_shape = self.get_middle_shape(shape)
-        # middle_image = cv2.resize(image, middle_shape)
-        # cv2.imwrite(self.__middle_path + '/' + image_name, middle_image)
+        middle_image = cv2.resize(image, middle_shape)
+        cv2.imwrite(self.__middle_path + '/' + image_name, middle_image)
 
         image_info['small'] = self.small_url + '/' + image_name
         image_info['middle'] = self.middle_url + '/' + image_name
@@ -32,8 +32,10 @@ class ConvertImage(object):
         image_info['small_height'] = small_shape[1]
         image_info['middle_width'] = middle_shape[0]
         image_info['middle_height'] = middle_shape[1]
-        image_info['desc'] = image_name
+        image_info['desc'] = ''
         image_info['type'] = self.type
+        image_info['name'] = image_name
+        image_info['id'] = image_name
         self.image_json.append(image_info)
         print(image_name, ' process finish')
 
@@ -83,6 +85,7 @@ class ConvertImage(object):
                     image = cv2.imread(os.path.join(img_dir, img))
                     self.resize_picture(image, img)
 
+        self.image_json = list(sorted(self.image_json, key=lambda x: x['id']))
         with open('image_json.json', 'w', encoding='utf-8') as w:
             json.dump(self.image_json, w)
 
